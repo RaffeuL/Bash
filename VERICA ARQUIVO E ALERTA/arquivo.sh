@@ -5,8 +5,9 @@ cd 'Área de Trabalho'/Diretorios
 mkdir Log
 
 diretorio=Log/log.txt
+dif=false
 
-date >> $diretorio
+date > $diretorio
 echo "Início da verificação" >> $diretorio
 
 for modelo in Modelo/*; do
@@ -21,6 +22,7 @@ for modelo in Modelo/*; do
 					echo "SÃO IGUAIS!" >> $diretorio
 					echo "Nenhuma restauração é necessária!" >> $diretorio
 				else    #conteudo diferente
+					dif=true
 					echo "Os arquivos $modelo e $analisado são DIFERENTES!" >> $diretorio
 					echo $diferenca >> $diretorio
 					echo "Restauração necessária!" >> $diretorio
@@ -30,6 +32,7 @@ for modelo in Modelo/*; do
 		fi
 	done
 	if [ $crp = false ];then #arquivo faltando
+		dif=true
 		echo "O arquivo $modelo NÃO EXISTE no diretório Analisado!" >> $diretorio
 		echo "Restauração necessária!" >> $diretorio
 		cp $modelo Analisado
@@ -45,6 +48,7 @@ for analisado in Analisado/*; do
 		fi
 	done
 	if [ $crp = false ];then
+		dif=true
 		echo "O arquivo $analisado NÃO EXISTE no diretório Modelo" >> $diretorio
 		echo "Exclusão necessária!" >> $diretorio
 		rm $analisado
@@ -53,6 +57,6 @@ done
 
 echo "Fim da verificação" >> $diretorio
 
-echo "======================================================================================================" >> $diretorio
-
-sendEmail -f giovannrcesar10@gmail.com -t rafael91.lisboa@gmail.com -u "RELATÓRIO" -o message-file=/home/giovanne/'Área de Trabalho'/Diretorios/Log/log.txt -s smtp.gmail.com:587 -xu giovannrcesar10@gmail.com -xp SENHA
+if [ $dif = true ];then
+	sendEmail -f giovannrcesar10@gmail.com -t rafael91.lisboa@gmail.com -u "RELATÓRIO" -o message-file=/home/giovanne/'Área de Trabalho'/Diretorios/Log/log.txt -s smtp.gmail.com:587 -xu giovannrcesar10@gmail.com -xp SENHA
+fi
