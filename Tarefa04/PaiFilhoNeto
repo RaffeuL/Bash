@@ -1,0 +1,36 @@
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+
+void Pai(void);
+void Filho(void);
+void Neto(void);
+
+void main(void){
+pid_t pidPai = fork(); //Cria o processo pai
+if (pidPai == 0){ 
+	pid_t pidFilho = fork(); // Cria o processo neto
+	if (pidFilho == 0)
+		Neto();	
+	else
+		Filho();
+}
+else
+	Pai();
+exit(0);
+}
+
+
+void Pai(void){
+	printf("-----PROCESSO PAI FINALIZADO-----\n");
+}
+
+void Filho(void){
+	printf("-----PROCESSO FILHO FINALIZADO-----\n");
+}
+
+void Neto(void){
+	printf("-----PROCESSO NETO FINALIZADO-----\n");
+}
+
