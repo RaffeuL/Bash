@@ -3,34 +3,50 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
-void Pai(void);
-void Filho(void);
-void Neto(void);
+int Pai(int n);
+int Filho(int n);
+void Neto(int n,char x,char y,char z);
 
 void main(void){
-pid_t pidPai = fork(); //Cria o processo pai
-if (pidPai == 0){ 
-	pid_t pidFilho = fork(); // Cria o processo neto
-	if (pidFilho == 0)
-		Neto();	
-	else
-		Filho();
-}
-else
-	Pai();
-exit(0);
-}
-
-
-void Pai(void){
-	printf("-----PROCESSO PAI FINALIZADO-----\n");
-}
-
-void Filho(void){
-	printf("-----PROCESSO FILHO FINALIZADO-----\n");
-}
-
-void Neto(void){
-	printf("-----PROCESSO NETO FINALIZADO-----\n");
+	pid_t pidPai = fork(); //Cria o processo pai
+	if (pidPai == 0){ 
+		pid_t pidFilho = fork(); // Cria o processo filho
+		if (pidFilho == 0){
+			Neto(6,'A','B','C');
+			printf("\n-----PROCESSO NETO FINALIZADO-----\n");
+		}
+		else{
+			printf("\n");
+			for (int i=0; i<10; i++) printf("%d ", Filho(i));
+			printf("\n-----PROCESSO FILHO FINALIZADO-----\n");
+		}
+	}
+	else{
+		printf("10! = ");
+		printf("%d", Pai(10));
+		printf("\n-----PROCESSO PAI FINALIZADO-----\n");
+	}
+	exit(0);
 }
 
+
+int Pai(int n){
+	if (n==0) return 1;
+	return (n * Pai(n-1));
+	exit(0);
+}
+
+int Filho(int n) {
+	if(n == 0) return 0;
+	else if(n == 1) return 1;
+	else return (Filho(n-1) + Filho(n-2));
+	exit(0);
+}
+
+void Neto(int n,char x,char y,char z){
+	if(n>0){
+		Neto(n-1,x,z,y);
+		printf("%c -> %c",x,y);
+		Neto(n-1,z,y,x);
+	}
+}
