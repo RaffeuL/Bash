@@ -2,31 +2,37 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 
 int Pai(long int n);
 double Filho(double n);
 void Neto(int n,char x,char y,char z);
 
-void main(void){
-	pid_t pidPai = fork(); //Cria o processo pai
+int main(void){
+	printf("\n-----INICIO DO PROCESSO PAI-----\n");
+	pid_t pidPai = fork(); //Cria o processo pai	
 	if (pidPai == 0){ 
-		pid_t pidFilho = fork(); // Cria o processo filho
+		printf("\n*****INICIO DO PROCESSO FILHO*****\n");
+		pid_t pidFilho = fork(); // Cria o processo filho		
 		if (pidFilho == 0){
+			printf("\n+++++INICIO DO PROCESSO NETO+++++\n");			
 			Neto(6,'A','B','C');
-			printf("\n-----PROCESSO NETO FINALIZADO-----\n");
+			printf("\n+++++PROCESSO NETO FINALIZADO+++++\n");
 		}
 		else{
 			printf("\n");
-			for (int i=0; i<100; i++) printf("%.0f ", Filho(i));
-			printf("\n-----PROCESSO FILHO FINALIZADO-----\n");
+			for (int i=0; i<100; i++) printf(" %.0f /", Filho(i));
+			printf("\n*****PROCESSO FILHO FINALIZADO*****\n");
+			wait(0);
 		}
 	}
 	else{
-		printf("10! = ");
-		printf("%d", Pai(10));
+		printf("\n10! = ");
+		printf("%d\n", Pai(10));
 		printf("\n-----PROCESSO PAI FINALIZADO-----\n");
+		wait(0);
 	}
-	exit(0);
+	return 0;
 }
 
 
@@ -54,7 +60,7 @@ double Filho(double n){
 void Neto(int n,char x,char y,char z){
 	if(n>0){
 		Neto(n-1,x,z,y);
-		printf("%c -> %c",x,y);
+		printf("%c -> %c /",x,y);
 		Neto(n-1,z,y,x);
 	}
 }
